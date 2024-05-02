@@ -2,7 +2,14 @@ from django.db import models
 from django.utils.text import slugify
 
 
-# Create your models here.
+
+class Category(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.name
+
+
 class Book(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=300)
@@ -12,6 +19,7 @@ class Book(models.Model):
     quantity = models.IntegerField()
     picture = models.ImageField(upload_to='images/')
     slug = models.SlugField(unique=True, blank=True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, default="")
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -20,3 +28,4 @@ class Book(models.Model):
 
     def __str__(self):
         return f"{self.name} | {self.author} | {self.price}"
+
